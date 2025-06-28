@@ -1,10 +1,10 @@
 from crewai import Crew, Task, Agent, LLM
 from crewai_tools import SerperDevTool
-from langchain_ibm import WatsonxLLM
+# from langchain_ibm import WatsonxLLM
 from dotenv import load_dotenv
 import os
 import gradio as gr
-from langchain_huggingface import HuggingFaceEndpoint
+# from langchain_huggingface import HuggingFaceEndpoint
 # from langchain.llms import HuggingFacePipeline
 # from transformers import pipeline
 
@@ -21,6 +21,7 @@ load_dotenv()
 
 os.environ["SERPER_API_KEY"] = os.getenv("SERPER_API_KEY")
 os.environ["WATSONX_APIKEY"] = os.getenv("WATSONX_APIKEY")
+os.environ["MISTRAL_API_KEY"] = os.getenv("MISTRAL_API_KEY")
 os.environ["WATSONX_URL"] = os.getenv("WATSONX_URL")
 os.environ["WATSONX_PROJECT_ID"] = os.getenv("WATSONX_PROJECT_ID")
 
@@ -46,8 +47,10 @@ params = {
 # )
 
 llm = LLM(
-    model="watsonx/meta-llama/llama-3-1-70b-instruct",
-    base_url=os.getenv("WATSONX_URL")
+    model="mistral-small",
+    temperature=0.7,
+    base_url="https://api.mistral.ai/v1", 
+    api_key=os.getenv("MISTRAL_API_KEY") 
 )
 
 # llm = HuggingFaceEndpoint(
@@ -67,8 +70,10 @@ llm = LLM(
 # )
 
 function_calling_llm = LLM(
-    model="watsonx/meta-llama/llama-3-1-70b-instruct",
-    base_url=os.getenv("WATSONX_URL")
+    model="mistral-small",
+    temperature=0.7,
+    base_url="https://api.mistral.ai/v1", 
+    api_key=os.getenv("MISTRAL_API_KEY") 
 )
 
 # function_calling_llm = HuggingFaceEndpoint(
@@ -169,12 +174,49 @@ def run_multiagent_pipeline(user_topic):
         verbose=1
     )
 
-    return crew.kickoff()
+    crew.kickoff()
+
+    # Reading the generated outputs
+    def read_file(path):
+    
+        with open(path, "r", encoding="utf-8") as f:
+    
+            return f.read()
+
+    return (
+        read_file("./results/research_summary.txt"),
+        read_file("./results/analysis.txt"),
+        read_file("./results/speech.txt"),
+        read_file("./results/slides.txt")
+    )
 
 # Gradio UI
-gr.Interface(
-    fn=run_multiagent_pipeline,
-    inputs=gr.Textbox(label="Enter your Research Topic or Keywords"),
-    outputs=gr.Textbox(label="Final Output (Speech & Slide Summary)"),
-    title="Multi-Agent AI Research & Presentation Generator"
-).launch()
+# gr.Interface(
+#     fn=run_multiagent_pipeline,
+#     inputs=gr.Textbox(label="Enter your Research Topic or Keywords"),
+#     outputs=gr.Textbox(label="Final Output (Speech & Slide Summary)"),
+#     title="Multi-Agent AI Research & Presentation Generator"
+# ).launch()
+
+with gr.Blocks(title="Multi-Agent AI Research & Presentation Generator") as demo:
+    topic_input = gr.Textbox(label="Please input your Research Topic or Keywords")
+
+    run_button = gr.Button("Generate")
+
+    with gr.Tabs():
+        with gr.TabItem("🔬 Research Summary"):
+            research_output = gr.Textbox(lines=20, label="Research Summary")
+        with gr.TabItem("📊 Analysis"):
+            analysis_output = gr.Textbox(lines=20, label="Analysis")
+        with gr.TabItem("🗣️ Speech"):
+            speech_output = gr.Textbox(lines=20, label="Keynote Speech")
+        with gr.TabItem("🖼️ Slide Outline"):
+            slides_output = gr.Textbox(lines=20, label="Slide Deck Content")
+
+    run_button.click(
+        fn=run_multiagent_pipeline,
+        inputs=topic_input,
+        outputs=[research_output, analysis_output, speech_output, slides_output]
+    )
+
+demo.launch()

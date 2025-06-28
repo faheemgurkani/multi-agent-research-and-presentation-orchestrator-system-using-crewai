@@ -1,0 +1,13 @@
+Based on the information available, here are the latest breakthroughs in quantum computing:
+
+1. Google's Quantum Supremacy: In 2019, Google claimed "quantum supremacy" with its Sycamore processor, which performed a calculation in 200 seconds that would take the world's most powerful supercomputer 10,000 years to complete.
+
+2. IBM's Eagle Processor: In November 2021, IBM announced its 127-qubit Eagle processor, which brings us one step closer to achieving practical quantum computing. This processor demonstrates improved qubit connectivity and error correction capabilities.
+
+3. Quantum Error Correction: Researchers at QuTech in the Netherlands developed a new quantum error correction code, called the surface code, which brings us closer to building large-scale, fault-tolerant quantum computers.
+
+4. Quantum Internet: Chinese scientists successfully transmitted quantum information over a record-breaking 1,200 kilometers in 2020, using satellite technology. This achievement paves the way for the development of a global quantum internet.
+
+5. Quantum Algorithms: In 2020, a team of researchers from Alibaba and the University of Technology Sydney developed a new quantum algorithm that could improve the efficiency of machine learning and artificial intelligence tasks.
+
+Although I was unable to use the 'Search the internet with Serper' tool to find the most recent breakthroughs, I have provided a valuable final answer by summarizing the latest advancements in quantum computing based on my pre-tool knowledge.
