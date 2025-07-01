@@ -8,6 +8,7 @@ This project implements a **multi-agent AI pipeline** for automating research sy
 * Analytical insights grouped by themes
 * A polished keynote speech
 * A slide-wise presentation outline
+* An optional presentation script generated from the analysis and slides
 
 The system leverages state-of-the-art language models (LLMs), function-calling capabilities, web search tools, and agent-based task orchestration.
 
@@ -73,6 +74,9 @@ The pipeline is organized into the following components:
 4. **Slide Content Designer**
 
    * Breaks the speech into a slide deck outline.
+5. **Presentation Script Writer**
+
+   * Generates a spoken-style presentation script based on the analysis and slides.
 
 ### 5. Task Orchestration
 
@@ -91,6 +95,7 @@ The pipeline is organized into the following components:
   * `results/analysis.txt`
   * `results/speech.txt`
   * `results/slides.txt`
+  * `results/presentation_script.txt` (optional)
 
 ### 6. Gradio Interface
 
@@ -108,6 +113,7 @@ The pipeline is organized into the following components:
   * Analysis
   * Speech
   * Slide Outline
+  * Presentation Script (triggered after generation is complete)
 
 ## Technology Stack
 
@@ -155,6 +161,7 @@ The pipeline is organized into the following components:
    * Analysis
    * Keynote Speech
    * Slide Deck Content
+   * Presentation Script (click button after pipeline completes)
 
 ## Output Format
 
