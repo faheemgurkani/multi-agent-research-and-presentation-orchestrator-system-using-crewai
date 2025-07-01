@@ -198,6 +198,21 @@ def run_multiagent_pipeline(user_topic):
 #     title="Multi-Agent AI Research & Presentation Generator"
 # ).launch()
 
+def generate_presentation_script(analysis_text, slides_text):
+    prompt = f"""Using the following analysis and slide deck outline, generate a spoken-style presentation script that the presenter can read aloud. 
+    Avoid repeating the slide content verbatim; instead, provide natural and engaging speech aligned to each slide.
+
+    ### Analysis
+    {analysis_text}
+
+    ### Slides
+    {slides_text}
+    """
+    
+    response = llm.call(prompt)
+    
+    return response
+
 with gr.Blocks(title="Multi-Agent AI Research & Presentation Generator") as demo:
     topic_input = gr.Textbox(label="Please input your Research Topic or Keywords")
 
@@ -212,11 +227,32 @@ with gr.Blocks(title="Multi-Agent AI Research & Presentation Generator") as demo
             speech_output = gr.Textbox(lines=20, label="Keynote Speech")
         with gr.TabItem("🖼️ Slide Outline"):
             slides_output = gr.Textbox(lines=20, label="Slide Deck Content")
+        # with gr.TabItem("🎤 Presentation Script"):
+        #     presentation_output = gr.Textbox(lines=20, label="Presentation Script")
+        #     generate_script_button = gr.Button("Generate Presentation Script", visible=False)
+        with gr.TabItem("🎤 Presentation Script"):
+            
+            with gr.Column():
+                generate_script_button = gr.Button("Generate Presentation Script", visible=False)
+                presentation_output = gr.Textbox(lines=20, label="Presentation Script")
+
+
+    # After full generation pipeline
+    def after_pipeline(topic):
+        research, analysis, speech, slides = run_multiagent_pipeline(topic)
+        
+        return research, analysis, speech, slides, gr.update(visible=True)
 
     run_button.click(
-        fn=run_multiagent_pipeline,
+        fn=after_pipeline,
         inputs=topic_input,
-        outputs=[research_output, analysis_output, speech_output, slides_output]
+        outputs=[research_output, analysis_output, speech_output, slides_output, generate_script_button]
+    )
+
+    generate_script_button.click(
+        fn=generate_presentation_script,
+        inputs=[analysis_output, slides_output],
+        outputs=presentation_output
     )
 
 demo.launch()
